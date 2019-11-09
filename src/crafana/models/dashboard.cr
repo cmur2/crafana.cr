@@ -79,7 +79,7 @@ module Crafana
     end
 
     def to_json(json : JSON::Builder)
-      update_grid_pos
+      # update_grid_pos
 
       json.object do
         json.field "id", id
