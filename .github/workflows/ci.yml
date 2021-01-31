@@ -1,0 +1,32 @@
+---
+name: ci
+
+on:
+  push:
+    branches: [my]
+  pull_request:
+    branches: [my]
+  workflow_dispatch:
+  schedule:
+  - cron: '38 4 * * 4'  # weekly on thursday morning
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        crystal-version:
+        - '0.36.0'
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Crystal ${{ matrix.crystal-version }}
+      uses: oprypin/install-crystal@v1
+      with:
+        crystal: ${{ matrix.crystal-version }}
+    - name: Install dependencies
+      run: |
+        shards install
+    - name: Lint and Test
+      run: |
+        crystal tool format --check
+        crystal spec
